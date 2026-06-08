@@ -974,7 +974,7 @@ function hierarchyPeriodHTML(data, period) {
   // ── Grand Total Summary ──────────────────────────────────
   const grand = (data.grand || data.own || {})[period] || {};
   h += '<div style="margin-bottom:20px">';
-  h += '<div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.08);border-left:3px solid var(--acc);border-radius:0 6px 6px 0">🌐 Grand Total</div>';
+  h += '<div style="font-family:Syne,sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.08);border-left:3px solid var(--acc);border-radius:0 6px 6px 0">🌐 Grand Total</div>';
   h += '<div class="sg3" style="margin-bottom:0">'
     + statCard('rose','💎','Total Revenue', fmt(grand.totalRevenue||0)+' 💎','All teams combined')
     + statCard('pur','🎙️','Active Hosts', grand.totalHosts||0,'All streamers')
@@ -983,24 +983,24 @@ function hierarchyPeriodHTML(data, period) {
 
   // ── Super Admins ─────────────────────────────────────────
   if (role === 'country admin' && data.superAdmins && data.superAdmins.length) {
-    h += '<div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.06);border-left:3px solid var(--pu2);border-radius:0 6px 6px 0">⭐ Super Admins</div>';
+    h += '<div style="font-family:Syne,sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.06);border-left:3px solid var(--pu2);border-radius:0 6px 6px 0">⭐ Super Admins</div>';
     h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:20px"><thead><tr><th>Super Admin</th><th>Revenue</th><th>Active Hosts</th><th>Agencies</th><th></th></tr></thead><tbody>';
     data.superAdmins.forEach((sa, idx) => {
       const p = (sa[period]||{});
       const panId = 'sa_pan_' + period + '_' + idx;
       h += '<tr>'
-        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av" style="background:rgba(91,47,190,.1);color:var(--pu2);border-color:rgba(91,47,190,.25)">' + initials(sa.name) + '</div><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px">' + sa.name + '</span></div></td>'
+        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av" style="background:rgba(91,47,190,.1);color:var(--pu2);border-color:rgba(91,47,190,.25)">' + initials(sa.name) + '</div><span style="font-family:Syne,sans-serif;font-weight:700;font-size:12px">' + sa.name + '</span></div></td>'
         + '<td><span class="pill r">' + fmt(p.totalRevenue||0) + ' 💎</span></td>'
         + '<td><span class="pill p">' + (p.totalHosts||0) + '</span></td>'
         + '<td><span class="pill t">' + (p.agencies||[]).length + '</span></td>'
-        + '<td><button onclick="toggleHierPanel(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(91,47,190,.3);background:linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07));color:var(--pu2);font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap">👁 Details</button></td>'
+        + '<td><button onclick="toggleHierPanel(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(91,47,190,.3);background:linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07));color:var(--pu2);font-family:Syne,sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap">👁 Details</button></td>'
         + '</tr>'
         + '<tr id="' + panId + '" style="display:none"><td colspan="5" style="padding:0;background:rgba(91,47,190,.02)">'
         + '<div style="padding:14px 16px">';
 
       // SA own performance
       const saOwn = sa[period] || {};
-      h += '<div style="font-size:9px;font-family:'Syne',sans-serif;font-weight:700;color:var(--pu2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📊 ' + sa.name + ' — Team Performance</div>';
+      h += '<div style="font-size:9px;font-family:Syne,sans-serif;font-weight:700;color:var(--pu2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📊 ' + sa.name + ' — Team Performance</div>';
       h += '<div class="sg3" style="margin-bottom:14px">'
         + statCard('rose','💎','Revenue',fmt(saOwn.totalRevenue||0)+' 💎','')
         + statCard('pur','🎙️','Hosts',saOwn.totalHosts||0,'')
@@ -1009,7 +1009,7 @@ function hierarchyPeriodHTML(data, period) {
 
       // SA's admins
       if (sa.admins && sa.admins.length) {
-        h += '<div style="font-size:9px;font-family:'Syne',sans-serif;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">👤 Admins under ' + sa.name + '</div>';
+        h += '<div style="font-size:9px;font-family:Syne,sans-serif;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">👤 Admins under ' + sa.name + '</div>';
         h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:0"><thead><tr><th>Admin</th><th>Revenue</th><th>Hosts</th><th>Agencies</th><th></th></tr></thead><tbody>';
         sa.admins.forEach((ad, ai) => {
           const ap = (ad[period]||{});
@@ -1019,7 +1019,7 @@ function hierarchyPeriodHTML(data, period) {
             + '<td><span class="pill r">' + fmt(ap.totalRevenue||0) + ' 💎</span></td>'
             + '<td><span class="pill p">' + (ap.totalHosts||0) + '</span></td>'
             + '<td><span class="pill t">' + (ap.agencies||[]).length + '</span></td>'
-            + '<td><button onclick="toggleHierPanel(\'' + adPanId + '\',this)" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(192,22,138,.25);background:rgba(192,22,138,.07);color:var(--pk2);font-family:'Syne',sans-serif;font-size:8.5px;font-weight:700;cursor:pointer;white-space:nowrap">📋 Streamers</button></td>'
+            + '<td><button onclick="toggleHierPanel(\'' + adPanId + '\',this)" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(192,22,138,.25);background:rgba(192,22,138,.07);color:var(--pk2);font-family:Syne,sans-serif;font-size:8.5px;font-weight:700;cursor:pointer;white-space:nowrap">📋 Streamers</button></td>'
             + '</tr>'
             + '<tr id="' + adPanId + '" style="display:none"><td colspan="5" style="padding:0;background:rgba(192,22,138,.02)">'
             + '<div style="padding:12px 14px">' + miniStreamerTable(ap.streamers||[]) + '</div>'
@@ -1036,17 +1036,17 @@ function hierarchyPeriodHTML(data, period) {
   const directAdmins = role === 'country admin' ? (data.directAdmins||[]) : (data.admins||[]);
   if (directAdmins.length) {
     const lbl = role === 'country admin' ? '👤 Direct Admins' : '👤 My Admins';
-    h += '<div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.06);border-left:3px solid var(--rose);border-radius:0 6px 6px 0">' + lbl + '</div>';
+    h += '<div style="font-family:Syne,sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.06);border-left:3px solid var(--rose);border-radius:0 6px 6px 0">' + lbl + '</div>';
     h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:20px"><thead><tr><th>Admin</th><th>Revenue</th><th>Active Hosts</th><th>Agencies</th><th></th></tr></thead><tbody>';
     directAdmins.forEach((ad, idx) => {
       const ap = (ad[period]||{});
       const panId = 'da_pan_' + period + '_' + idx;
       h += '<tr>'
-        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av">' + initials(ad.name) + '</div><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px">' + ad.name + '</span></div></td>'
+        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av">' + initials(ad.name) + '</div><span style="font-family:Syne,sans-serif;font-weight:700;font-size:12px">' + ad.name + '</span></div></td>'
         + '<td><span class="pill r">' + fmt(ap.totalRevenue||0) + ' 💎</span></td>'
         + '<td><span class="pill p">' + (ap.totalHosts||0) + '</span></td>'
         + '<td><span class="pill t">' + (ap.agencies||[]).length + '</span></td>'
-        + '<td><button onclick="toggleHierPanel(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(192,22,138,.3);background:linear-gradient(135deg,rgba(192,22,138,.08),rgba(91,47,190,.05));color:var(--pk2);font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap">📋 Streamers</button></td>'
+        + '<td><button onclick="toggleHierPanel(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(192,22,138,.3);background:linear-gradient(135deg,rgba(192,22,138,.08),rgba(91,47,190,.05));color:var(--pk2);font-family:Syne,sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap">📋 Streamers</button></td>'
         + '</tr>'
         + '<tr id="' + panId + '" style="display:none"><td colspan="5" style="padding:0;background:rgba(192,22,138,.02)">'
         + '<div style="padding:12px 14px">' + miniStreamerTable(ap.streamers||[]) + '</div>'
@@ -1059,7 +1059,7 @@ function hierarchyPeriodHTML(data, period) {
   if (data.own) {
     const own = (data.own||{})[period] || {};
     if (own.streamers && own.streamers.length) {
-      h += '<div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.06);border-left:3px solid var(--acc);border-radius:0 6px 6px 0">🎙️ My Own Streamers</div>';
+      h += '<div style="font-family:Syne,sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.06);border-left:3px solid var(--acc);border-radius:0 6px 6px 0">🎙️ My Own Streamers</div>';
       h += dashPeriodHTML(own, 'Own');
     }
   }
@@ -1116,7 +1116,7 @@ function dashPeriodHTML(period, label) {
 
   if (ags.length) {
     const safeLabel = label.replace(/\s+/g,'_');
-    h += '<div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.06);border-left:3px solid var(--c2);border-radius:0 6px 6px 0">◆ Agency Breakdown</div>';
+    h += '<div style="font-family:Syne,sans-serif;font-size:10px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:rgba(124,58,237,0.06);border-left:3px solid var(--c2);border-radius:0 6px 6px 0">◆ Agency Breakdown</div>';
     h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:8px"><thead><tr><th>Agency</th><th>Union ID</th><th>Streamers</th><th>Revenue</th><th>Valid Duration</th><th>Valid Days</th><th></th></tr></thead><tbody>';
     ags.forEach((agN, idx) => {
       const agS   = st.filter(r => r.unionName === agN);
@@ -1128,17 +1128,17 @@ function dashPeriodHTML(period, label) {
       // store hosts data as JSON in a hidden span
       const hostsJson = JSON.stringify(agS).replace(/'/g,"&#39;").replace(/"/g,'&quot;');
       h += '<tr>'
-        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av" style="background:rgba(200,151,58,.08);color:var(--gold3);border-color:rgba(200,151,58,.22)">' + initials(agN) + '</div><span style="font-family:'Syne',sans-serif;font-size:11.5px;font-weight:600">' + agN + '</span></div></td>'
+        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av" style="background:rgba(200,151,58,.08);color:var(--gold3);border-color:rgba(200,151,58,.22)">' + initials(agN) + '</div><span style="font-family:Syne,sans-serif;font-size:11.5px;font-weight:600">' + agN + '</span></div></td>'
         + '<td><span class="pill g">' + uid + '</span></td>'
         + '<td><span class="pill p">' + agS.length + '</span></td>'
         + '<td><span class="pill r">' + fmt(agR) + ' 💎</span></td>'
         + '<td><span class="pill t">' + fmt(agH) + '</span></td>'
         + '<td><span class="pill gr">' + fmt(agD) + 'd</span></td>'
-        + '<td><button onclick="toggleAgHosts(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(91,47,190,.3);background:linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07));color:var(--pu2);font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap;transition:.18s" onmouseover="this.style.background=\'linear-gradient(135deg,rgba(91,47,190,.22),rgba(192,22,138,.14))\'" onmouseout="this.style.background=\'linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07))\'">👥 View Hosts</button></td>'
+        + '<td><button onclick="toggleAgHosts(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(91,47,190,.3);background:linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07));color:var(--pu2);font-family:Syne,sans-serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap;transition:.18s" onmouseover="this.style.background=\'linear-gradient(135deg,rgba(91,47,190,.22),rgba(192,22,138,.14))\'" onmouseout="this.style.background=\'linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07))\'">👥 View Hosts</button></td>'
         + '</tr>'
         + '<tr id="' + panId + '" style="display:none"><td colspan="7" style="padding:0;background:rgba(91,47,190,.025)">'
         + '<div style="padding:14px 16px 18px">'
-        + '<div style="font-family:'Syne',sans-serif;font-size:9.5px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:5px 10px;background:rgba(124,58,237,0.08);border-left:3px solid var(--rose);border-radius:0 5px 5px 0">🎙️ ' + agN + ' — ' + agS.length + ' Hosts</div>'
+        + '<div style="font-family:Syne,sans-serif;font-size:9.5px;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:5px 10px;background:rgba(124,58,237,0.08);border-left:3px solid var(--rose);border-radius:0 5px 5px 0">🎙️ ' + agN + ' — ' + agS.length + ' Hosts</div>'
         + '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Revenue</th><th>Hot Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>'
         + agS.map(r =>
             '<tr>'
