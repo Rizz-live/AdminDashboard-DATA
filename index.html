@@ -613,6 +613,23 @@ async function api(params) {
   return data;
 }
 
+// Users cache — sheet se background mein load hoga
+window._usersCache = null;
+window._usersCacheTime = 0;
+
+// App start hote hi background mein users load karo
+async function prefetchUsers() {
+  try {
+    const fromAPI = await api({ action: 'getUsers' });
+    if (Array.isArray(fromAPI) && fromAPI.length > 0) {
+      window._usersCache = fromAPI;
+      window._usersCacheTime = Date.now();
+    }
+  } catch(e) { /* silent */ }
+}
+// Page load hone ke 1 second baad background fetch
+setTimeout(prefetchUsers, 1000);
+
 async function doLogin() {
   const uid = document.getElementById('lid').value.trim();
   const pw  = document.getElementById('lpw').value.trim();
@@ -620,16 +637,33 @@ async function doLogin() {
   hideErr('lerr');
   if (!uid || !pw) { showErr('lerr', 'Please enter both User ID and Password.'); return; }
   btn.classList.add('ld'); btn.disabled = true;
+
   try {
-    let users = FALLBACK_USERS;
-    try {
-      const fromAPI = await api({ action: 'getUsers' });
-      if (Array.isArray(fromAPI) && fromAPI.length > 0) users = fromAPI;
-    } catch (e) { console.warn('Using local users'); }
-    const match = users.find(u =>
+    // Step 1: Pehle cached ya fallback users se try karo — instant!
+    let users = window._usersCache || FALLBACK_USERS;
+    let match = users.find(u =>
       String(u.id || '').trim().toLowerCase() === uid.toLowerCase() &&
       String(u.password || '').trim() === pw
     );
+
+    // Step 2: Agar fallback mein nahi mila, tab sheet se fetch karo (3 sec timeout)
+    if (!match && !window._usersCache) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3000);
+        const fromAPI = await api({ action: 'getUsers' });
+        clearTimeout(timeout);
+        if (Array.isArray(fromAPI) && fromAPI.length > 0) {
+          window._usersCache = fromAPI;
+          users = fromAPI;
+          match = users.find(u =>
+            String(u.id || '').trim().toLowerCase() === uid.toLowerCase() &&
+            String(u.password || '').trim() === pw
+          );
+        }
+      } catch(e) { /* sheet unavailable, fallback use karein */ }
+    }
+
     if (!match) {
       showErr('lerr', '❌ Wrong User ID or Password. Please check and try again.');
       document.getElementById('lpw').value = '';
@@ -671,6 +705,7 @@ function doLogout() {
   CU = null;
   window._hostsLoaded = false;
   window._allHosts = [];
+  window._usersCache = null;
   document.getElementById('app').classList.remove('on');
   document.getElementById('loginPage').classList.remove('hidden');
   document.getElementById('lid').value = '';
