@@ -1048,12 +1048,61 @@ async function loadTotalHosts() {
   const cnt = document.getElementById('th-count');
   res.innerHTML = '<div class="loading-box"><div class="loading-ring"></div><p>Loading hosts...</p></div>';
   try {
-    const data = await api({ action: 'getTotalHosts', adminName: CU.name || CU.id });
-    if (!data.success) throw new Error(data.error || 'No data');
-    window._allHosts = data.hosts;
+    const role   = (CU.role || '').toLowerCase();
+    const myName = CU.name || CU.id;
+    let allHosts = [];
+
+    if (role === 'country admin' || role === 'super admin') {
+      // Get all team member names including self
+      const users  = window._usersCache || FALLBACK_USERS;
+      const myNameL = myName.toLowerCase();
+
+      // Build full team name list
+      let teamNames = [myName];
+      if (role === 'country admin') {
+        users.forEach(u => {
+          const parent = (u.parent||'').trim().toLowerCase();
+          if (parent === myNameL) teamNames.push(u.name);
+          // Super admin ke admins bhi
+        });
+        // Also get SA's admins
+        const saNames = teamNames.slice(1).filter(n => {
+          const u = users.find(x => x.name === n);
+          return u && (u.role||'').toLowerCase() === 'super admin';
+        });
+        saNames.forEach(saName => {
+          users.forEach(u => {
+            if ((u.parent||'').trim().toLowerCase() === saName.toLowerCase())
+              teamNames.push(u.name);
+          });
+        });
+      } else {
+        // Super Admin — apne admins
+        users.forEach(u => {
+          if ((u.parent||'').trim().toLowerCase() === myNameL) teamNames.push(u.name);
+        });
+      }
+
+      // Fetch hosts for each team member in parallel
+      const results = await Promise.allSettled(
+        teamNames.map(name => api({ action: 'getTotalHosts', adminName: name }))
+      );
+      results.forEach(r => {
+        if (r.status === 'fulfilled' && r.value.success) {
+          allHosts = allHosts.concat(r.value.hosts || []);
+        }
+      });
+    } else {
+      // Regular Admin — sirf apne hosts
+      const data = await api({ action: 'getTotalHosts', adminName: myName });
+      if (!data.success) throw new Error(data.error || 'No data');
+      allHosts = data.hosts;
+    }
+
+    window._allHosts = allHosts;
     window._hostsLoaded = true;
-    cnt.textContent = data.hosts.length + ' hosts';
-    renderTotalHosts(data.hosts);
+    cnt.textContent = allHosts.length + ' hosts';
+    renderTotalHosts(allHosts);
   } catch(e) {
     res.innerHTML = '<div class="nodata" style="margin:16px"><big>👥</big><p>' + e.message + '</p></div>';
     cnt.textContent = 'Error loading';
@@ -1068,6 +1117,7 @@ function filterTotalHosts() {
     (h.liveCreatorId || '').toLowerCase().includes(q) ||
     (h.agencyName    || '').toLowerCase().includes(q) ||
     (h.agencyNick    || '').toLowerCase().includes(q) ||
+    (h.admin         || '').toLowerCase().includes(q) ||
     (h.idx           || '').toLowerCase().includes(q)
   );
   renderTotalHosts(filtered);
@@ -1086,6 +1136,7 @@ function renderTotalHosts(hosts) {
     + '<th>Agency</th>'
     + '<th>Agency Nick</th>'
     + '<th>Networks ID</th>'
+    + '<th>Admin</th>'
     + '<th>Star</th>'
     + '</tr></thead><tbody>';
   hosts.forEach((r, i) => {
@@ -1096,6 +1147,7 @@ function renderTotalHosts(hosts) {
       + '<td style="font-size:11.5px;font-weight:500">' + (r.agencyName||'—') + '</td>'
       + '<td><span class="pill p">' + (r.agencyNick||'—') + '</span></td>'
       + '<td><span class="pill t">' + (r.networksId||'—') + '</span></td>'
+      + '<td><span class="pill pu" style="background:rgba(91,47,190,.07);color:var(--pu2);border:1px solid rgba(91,47,190,.18)">' + (r.admin||'—') + '</span></td>'
       + '<td style="font-size:11px;color:var(--dim)">' + (r.starRating||'—') + '</td>'
       + '</tr>';
   });
