@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Rizz Live — Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pu:#5B2FBE;--pu2:#7B50D4;--pu3:#3B0F8C;
+  --gold:#C8973A;--gold2:#DDB55A;--gold3:#B8860B;
+  --pk:#C0168A;--pk2:#D4389C;
+  --teal:#0D7A6E;--green:#166534;--red:#991B1B;
+  --bg:#F0EDF8;--card:#FFFFFF;--dark:#1A0A3C;--dim:#9B82C8;
+  --border:rgba(91,47,190,0.12);
+  --sb:240px;
+}
+html{font-size:14px;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--dark);display:flex;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 600px 400px at 15% 10%,rgba(91,47,190,0.06) 0%,transparent 70%),
+  radial-gradient(ellipse 500px 400px at 85% 85%,rgba(192,22,138,0.04) 0%,transparent 70%)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(91,47,190,0.25);border-radius:4px}
+
+/* LOGIN */
+#loginPage{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#120630,#0d0428 60%,#1a0440)}
+#loginPage::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 500px 350px at 30% 35%,rgba(91,47,190,0.35) 0%,transparent 60%),
+  radial-gradient(ellipse 400px 300px at 75% 70%,rgba(192,22,138,0.2) 0%,transparent 60%)}
+#loginPage.hidden{display:none!important}
+.lc{position:relative;z-index:1;width:100%;max-width:420px;
+  background:rgba(255,255,255,0.035);border:1px solid rgba(91,47,190,0.3);border-top:2px solid var(--gold);
+  border-radius:24px;padding:44px 40px;backdrop-filter:blur(40px);
+  box-shadow:0 40px 100px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.05)}
+.cn{position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid}
+.cn.tl{top:10px;left:10px;border-width:2px 0 0 2px}.cn.tr{top:10px;right:10px;border-width:2px 2px 0 0}
+.cn.bl{bottom:10px;left:10px;border-width:0 0 2px 2px}.cn.br{bottom:10px;right:10px;border-width:0 2px 2px 0}
+.lc-hd{display:flex;align-items:center;gap:14px;margin-bottom:34px;padding-bottom:20px;border-bottom:1px solid rgba(91,47,190,0.2)}
+.lc-brand{font-family:'Cinzel Decorative',serif;font-size:16px;font-weight:700;
+  background:linear-gradient(135deg,#fff,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lc-sub{font-size:9px;color:rgba(155,130,200,0.6);letter-spacing:3px;font-family:'Cinzel',serif;text-transform:uppercase;margin-top:3px}
+.lc h2{font-family:'Cinzel',serif;font-size:19px;font-weight:700;color:#fff;margin-bottom:5px}
+.lc p{font-size:12px;color:rgba(155,130,200,0.75);margin-bottom:28px}
+.lbl{display:block;font-size:9px;font-weight:700;font-family:'Cinzel',serif;text-transform:uppercase;letter-spacing:2px;color:var(--dim);margin-bottom:7px}
+.inp{width:100%;background:rgba(240,237,248,0.055);border:1px solid rgba(91,47,190,0.25);border-radius:10px;
+  padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:#fff;outline:none;transition:.2s}
+.inp:focus{border-color:rgba(91,47,190,0.65);background:rgba(91,47,190,0.08);box-shadow:0 0 0 3px rgba(91,47,190,0.12)}
+.inp::placeholder{color:rgba(155,130,200,0.45)}
+.pw-w{position:relative}.pw-w .inp{padding-right:46px}
+.eye{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:14px;color:rgba(155,130,200,0.55);padding:4px}
+.eye:hover{color:var(--gold)}
+.lbtn{width:100%;padding:14px;border-radius:10px;border:none;margin-top:8px;
+  background:linear-gradient(135deg,var(--pu),var(--pu2));color:#fff;
+  font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;transition:.2s;box-shadow:0 4px 20px rgba(91,47,190,0.45)}
+.lbtn:hover{transform:translateY(-1px)}
+.lbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;display:none;margin:0 auto}
+.lbtn.ld .spin{display:block}.lbtn.ld .bt{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lerr{display:none;margin-top:14px;padding:11px 16px;background:rgba(153,27,27,0.18);
+  border:1px solid rgba(153,27,27,0.3);border-left:3px solid #DC2626;border-radius:8px;font-size:12px;color:#FCA5A5}
+
+/* APP */
+#app{display:none;min-height:100vh;position:relative;z-index:1;width:100%}
+#app.on{display:flex}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;z-index:500;background:rgba(8,3,24,.78);backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:center}
+.modal-bg.on{display:flex}
+.modal{position:relative;background:linear-gradient(155deg,#190842,#110630);width:100%;max-width:385px;
+  border:1px solid rgba(91,47,190,.38);border-top:2px solid var(--gold);border-radius:20px;
+  padding:34px 30px;box-shadow:0 36px 90px rgba(0,0,0,.7);margin:16px}
+.modal-x{position:absolute;top:13px;right:13px;background:none;border:none;color:rgba(155,130,200,.45);font-size:17px;cursor:pointer;padding:5px}
+.modal-x:hover{color:var(--pk2)}
+.modal-t{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:5px}
+.modal-s{font-size:11.5px;color:rgba(155,130,200,.65);margin-bottom:22px}
+.modal-ok{margin-top:14px;padding:11px 15px;background:rgba(22,101,52,.14);border:1px solid rgba(22,101,52,.28);
+  border-left:3px solid #16A34A;border-radius:8px;font-size:11.5px;color:#86EFAC;display:none}
+
+/* SIDEBAR */
+.sb{width:var(--sb);min-height:100vh;flex-shrink:0;position:sticky;top:0;align-self:flex-start;
+  background:linear-gradient(180deg,#1C0A4A,#130730);
+  border-right:1px solid rgba(91,47,190,0.22);display:flex;flex-direction:column;
+  box-shadow:4px 0 28px rgba(0,0,0,0.35);z-index:100}
+.sb-logo{padding:16px 18px;border-bottom:1px solid rgba(91,47,190,0.18);display:flex;align-items:center;gap:11px}
+.sb-brand{font-family:'Cinzel Decorative',serif;font-size:12px;font-weight:700;
+  background:linear-gradient(135deg,#fff,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sb-tag{font-size:8px;color:rgba(155,130,200,0.45);letter-spacing:2.5px;font-family:'Cinzel',serif;text-transform:uppercase;margin-top:2px}
+.sb-user{padding:13px 18px;border-bottom:1px solid rgba(91,47,190,0.14);display:flex;align-items:center;gap:11px;cursor:pointer}
+.sb-user:hover{background:rgba(91,47,190,0.08)}
+.sb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(91,47,190,.4),rgba(192,22,138,.4));
+  border:2px solid var(--gold);color:var(--gold);font-size:11px;font-weight:700;font-family:'Cinzel',serif;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-uname{font-size:12.5px;font-weight:600;color:rgba(240,237,248,.92)}
+.role-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:100px;
+  font-size:8.5px;font-weight:700;letter-spacing:1.5px;font-family:'Cinzel',serif;text-transform:uppercase;
+  background:linear-gradient(135deg,rgba(91,47,190,.38),rgba(192,22,138,.25));
+  border:1px solid rgba(160,126,232,.45);color:#CCB8FF}
+.role-tag::before{content:"◆";font-size:6px;color:var(--gold)}
+.sb-sec{padding:16px 18px 5px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;
+  color:rgba(91,47,190,.45);font-family:'Cinzel',serif}
+.nav{display:flex;align-items:center;gap:11px;padding:10px 13px;margin:2px 8px;border-radius:10px;
+  color:rgba(160,126,232,.55);font-size:12.5px;font-weight:500;cursor:pointer;transition:.18s;
+  border:none;background:none;width:calc(100% - 16px);text-align:left;font-family:'DM Sans',sans-serif}
+.nav:hover{background:rgba(91,47,190,.1);color:rgba(240,237,248,.88)}
+.nav.on{background:linear-gradient(135deg,rgba(91,47,190,.26),rgba(192,22,138,.1));color:#fff;border:1px solid rgba(91,47,190,.28)}
+.nav-ic{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sb-ft{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(91,47,190,.14)}
+.logout{width:100%;padding:9px;border-radius:8px;border:1px solid rgba(192,22,138,.2);
+  background:transparent;color:rgba(160,126,232,.45);font-family:'Cinzel',serif;font-size:10px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.18s}
+.logout:hover{border-color:rgba(192,22,138,.5);color:var(--pk2);background:rgba(192,22,138,.07)}
+.sb-ver{font-size:8.5px;color:rgba(91,47,190,.3);text-align:center;margin-top:9px;letter-spacing:1px;font-family:'Cinzel',serif}
+
+/* MOBILE OVERLAY */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:150}
+.sb-overlay.on{display:block}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0}
+.pg{flex:1;padding:22px 26px;overflow-y:auto}
+
+/* MOBILE TOPBAR */
+.topbar{display:none;align-items:center;gap:12px;padding:12px 16px;
+  background:linear-gradient(135deg,#1C0A4A,#130730);border-bottom:1px solid rgba(91,47,190,.22);
+  position:sticky;top:0;z-index:50}
+.topbar-menu{background:none;border:none;color:rgba(160,126,232,.8);font-size:22px;cursor:pointer;padding:4px 6px;line-height:1}
+.topbar-brand{font-family:'Cinzel Decorative',serif;font-size:13px;font-weight:700;
+  background:linear-gradient(135deg,#fff,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbar-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,rgba(91,47,190,.4),rgba(192,22,138,.4));
+  border:2px solid var(--gold);color:var(--gold);font-size:10px;font-weight:700;font-family:'Cinzel',serif;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:auto;cursor:pointer}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(91,47,190,.05);margin-bottom:18px}
+.card-hd{padding:16px 22px;border-bottom:1px solid rgba(91,47,190,.07);display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,rgba(91,47,190,.03),rgba(192,22,138,.015))}
+.card-hd-ic{font-size:17px}.card-hd-t{font-family:'Cinzel',serif;font-size:12.5px;font-weight:700;color:var(--pu3);letter-spacing:.4px}
+.card-hd-s{font-size:11px;color:var(--dim);margin-left:auto}
+.card-bd{padding:20px 22px}
+
+/* TOP STAT */
+.top-stat{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:17px 19px;position:relative;overflow:hidden}
+.top-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:15px 15px 0 0}
+.ts-gold::before{background:linear-gradient(90deg,var(--gold3),var(--gold2))}
+.ts-l{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--dim);margin-bottom:9px;font-family:'Cinzel',serif}
+.ts-v{font-size:22px;font-weight:700;color:var(--dark);font-family:'Cinzel',serif}
+.ts-s{font-size:10.5px;color:var(--dim);margin-top:3px}
+
+/* STAT GRID */
+.sg3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sg2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sc{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:15px;border-left:3.5px solid transparent}
+.sc.rose{border-left-color:var(--pk2)}.sc.teal{border-left-color:var(--teal)}
+.sc.gold{border-left-color:var(--gold)}.sc.pur{border-left-color:var(--pu2)}
+.sc-ic{font-size:17px;margin-bottom:7px}
+.sc-l{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--dim);margin-bottom:4px;font-family:'Cinzel',serif}
+.sc-v{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--dark)}
+.sc-s{font-size:10.5px;color:var(--dim);margin-top:2px}
+
+/* SEARCH */
+.sr{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.sf{flex:1;min-width:150px}
+.si{width:100%;background:#FAFAFE;border:1px solid rgba(91,47,190,.17);border-radius:10px;
+  padding:10px 15px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--dark);outline:none;transition:.18s}
+.si:focus{border-color:rgba(91,47,190,.48);background:#fff;box-shadow:0 0 0 3px rgba(91,47,190,.07)}
+.sbtn{padding:10px 20px;border-radius:10px;border:none;font-family:'Cinzel',serif;font-size:10.5px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:.18s}
+.sbtn:hover{transform:translateY(-1px)}
+.sbtn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.sbtn.pk{background:linear-gradient(135deg,var(--pk),var(--pk2));color:#fff;box-shadow:0 3px 14px rgba(192,22,138,.3)}
+.sbtn.pu{background:linear-gradient(135deg,var(--pu),var(--pu2));color:#fff;box-shadow:0 3px 14px rgba(91,47,190,.3)}
+
+/* ERROR */
+.err{display:none;margin-top:12px;padding:10px 15px;background:rgba(153,27,27,.06);
+  border:1px solid rgba(153,27,27,.18);border-left:3px solid #DC2626;border-radius:8px;font-size:12px;color:var(--red)}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid rgba(91,47,190,.09);padding:0 22px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{height:0}
+.tab{padding:12px 17px;border:none;background:transparent;color:var(--dim);font-family:'Cinzel',serif;
+  font-size:10.5px;font-weight:600;letter-spacing:.5px;cursor:pointer;
+  border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:.18s;text-transform:uppercase;white-space:nowrap}
+.tab:hover{color:var(--pu)}.tab.on{color:var(--pu3);border-bottom-color:var(--gold);font-weight:700}
+.tb{padding:20px 22px;display:none}.tb.on{display:block}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.8px;
+  color:rgba(184,134,11,.65);padding:8px 13px;background:rgba(200,151,58,.045);
+  border-bottom:1.5px solid rgba(200,151,58,.18);font-family:'Cinzel',serif;white-space:nowrap}
+.tbl td{padding:11px 13px;border-bottom:1px solid rgba(91,47,190,.055);color:#3D2060;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:rgba(91,47,190,.018)}
+.av{width:32px;height:32px;border-radius:8px;background:rgba(192,22,138,.07);color:var(--pk2);
+  border:1px solid rgba(192,22,138,.2);font-family:'Cinzel',serif;font-size:9px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* PILLS */
+.pill{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600}
+.pill.r{background:rgba(192,22,138,.07);color:var(--pk2);border:1px solid rgba(192,22,138,.18)}
+.pill.t{background:rgba(13,122,110,.07);color:var(--teal);border:1px solid rgba(13,122,110,.18)}
+.pill.g{background:rgba(200,151,58,.09);color:var(--gold3);border:1px solid rgba(200,151,58,.22)}
+.pill.p{background:rgba(91,47,190,.07);color:var(--pu2);border:1px solid rgba(91,47,190,.18)}
+.pill.gr{background:rgba(22,101,52,.07);color:var(--green);border:1px solid rgba(22,101,52,.18)}
+
+/* PROFILE ROW */
+.pr{display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid rgba(91,47,190,.07)}
+.pr-av{width:46px;height:46px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:12px;font-weight:700}
+.pr-av.h{background:rgba(192,22,138,.07);color:var(--pk2);border:1.5px solid rgba(192,22,138,.22)}
+.pr-av.a{background:rgba(200,151,58,.09);color:var(--gold3);border:1.5px solid rgba(200,151,58,.25)}
+.pr-name{font-size:16px;font-weight:700;color:var(--dark);font-family:'Cinzel',serif}
+.pr-meta{font-size:11px;color:var(--dim);margin-top:3px}
+.pr-meta code{font-family:'Cinzel',serif;background:rgba(91,47,190,.07);border:1px solid rgba(91,47,190,.12);padding:1px 7px;border-radius:4px;font-size:10px;color:var(--pu)}
+.pr-badge{margin-left:auto;padding:4px 12px;border-radius:100px;font-size:8.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;font-family:'Cinzel',serif;flex-shrink:0}
+.pr-badge.act{background:rgba(22,101,52,.07);color:var(--green);border:1px solid rgba(22,101,52,.18)}
+.pr-badge.ag{background:rgba(200,151,58,.09);color:var(--gold3);border:1px solid rgba(200,151,58,.22)}
+
+/* NO DATA / LOADING */
+.nodata{text-align:center;padding:40px 20px;color:var(--dim);border:1.5px dashed rgba(91,47,190,.13);border-radius:12px;margin-top:8px}
+.nodata big{display:block;font-size:34px;margin-bottom:10px;opacity:.55}
+.nodata p{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.4px}
+.loading-box{text-align:center;padding:36px 20px;color:var(--dim)}
+.loading-ring{width:36px;height:36px;border:3px solid rgba(91,47,190,.15);border-top-color:var(--pu);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+
+/* DASHBOARD HEADER */
+.dh{display:flex;align-items:center;gap:13px;padding:15px 20px;margin-bottom:18px;
+  background:var(--card);border:1px solid var(--border);border-radius:15px;box-shadow:0 2px 12px rgba(91,47,190,.045);
+  flex-wrap:wrap}
+.dh-av{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,rgba(91,47,190,.2),rgba(192,22,138,.2));
+  border:2px solid var(--gold);color:var(--gold);font-size:13px;font-weight:700;font-family:'Cinzel',serif;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dh-name{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--dark)}
+.dh-sub{font-size:11px;color:var(--dim);margin-top:2px}
+.dh-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dh-live{display:flex;align-items:center;gap:6px;background:rgba(91,47,190,.06);
+  border:1px solid rgba(91,47,190,.14);border-radius:100px;padding:5px 13px}
+.dh-dot{width:6px;height:6px;border-radius:50%;background:var(--pu2);animation:pulse 1.3s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+.dh-live span{font-family:'Cinzel',serif;font-size:8.5px;font-weight:700;letter-spacing:2px;color:var(--pu2);text-transform:uppercase}
+
+/* DATA DATE BADGE */
+.dh-date{display:none;align-items:center;gap:6px;background:rgba(200,151,58,.08);
+  border:1px solid rgba(200,151,58,.25);border-radius:100px;padding:5px 13px}
+.dh-date-ic{font-size:11px}
+.dh-date-wrap{display:flex;flex-direction:column;align-items:flex-start}
+.dh-date-lbl{font-family:'Cinzel',serif;font-size:7.5px;font-weight:700;letter-spacing:1.5px;color:rgba(200,151,58,.65);text-transform:uppercase}
+.dh-date-val{font-family:'Cinzel',serif;font-size:10px;font-weight:700;color:var(--gold3);margin-top:1px}
+
+/* MOBILE RESPONSIVE */
+@media(max-width:768px){
+  :root{--sb:240px}
+
+  /* Mobile topbar show */
+  .topbar{display:flex}
+
+  /* Sidebar becomes full drawer — above overlay */
+  .sb{
+    position:fixed;top:0;left:0;height:100vh;width:240px;
+    transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:200;overflow-y:auto;
+  }
+  .sb.open{transform:translateX(0);box-shadow:8px 0 40px rgba(0,0,0,.5)}
+
+  /* Main takes full width, no flex row */
+  #app.on{flex-direction:column}
+  .main{width:100%;min-width:0}
+  .pg{padding:14px 12px}
+
+  /* Grids */
+  .sg3{grid-template-columns:1fr 1fr}
+  .sg2{grid-template-columns:1fr}
+
+  /* Tables scroll */
+  .tbl th{font-size:7px;padding:6px 9px}
+  .tbl td{padding:9px 9px;font-size:11px}
+
+  /* Dashboard header compact */
+  .dh{gap:8px;padding:12px 14px}
+  .dh-name{font-size:13px}
+  .dh-right{gap:6px}
+  .dh-live{padding:4px 10px}
+  .dh-date{padding:4px 10px}
+
+  /* Search */
+  .sr{flex-direction:column}
+  .sbtn{width:100%;justify-content:center}
+
+  /* Profile row */
+  .pr{flex-wrap:wrap;gap:10px;padding:14px}
+  .pr-badge{font-size:7.5px}
+
+  /* Modal */
+  .modal{padding:24px 20px;margin:12px}
+
+  /* Tabs */
+  .tabs{padding:0 12px}
+  .tab{padding:10px 12px;font-size:9.5px}
+  .tb{padding:14px}
+}
+
+@media(max-width:480px){
+  .sg3{grid-template-columns:1fr}
+  .dh-av{width:36px;height:36px;font-size:11px}
+  .pr-name{font-size:14px}
+}
+</style>
+</head>
+<body>
+
+<!-- MODAL: CHANGE PASSWORD -->
+<div class="modal-bg" id="pwModal">
+<div class="modal">
+  <div class="cn tl"></div><div class="cn tr"></div><div class="cn bl"></div><div class="cn br"></div>
+  <button class="modal-x" onclick="closePw()">✕</button>
+  <div class="modal-t">🔐 Change Password</div>
+  <div class="modal-s">Update your account password</div>
+  <div style="margin-bottom:16px">
+    <label class="lbl" style="color:var(--dim)">Current Password</label>
+    <div class="pw-w"><input class="inp" id="pwOld" type="password" placeholder="Current password"/><button class="eye" onclick="eyeToggle('pwOld',this)">👁</button></div>
+  </div>
+  <div style="margin-bottom:16px">
+    <label class="lbl" style="color:var(--dim)">New Password</label>
+    <div class="pw-w"><input class="inp" id="pwNew" type="password" placeholder="New password"/><button class="eye" onclick="eyeToggle('pwNew',this)">👁</button></div>
+  </div>
+  <div style="margin-bottom:0">
+    <label class="lbl" style="color:var(--dim)">Confirm New Password</label>
+    <div class="pw-w"><input class="inp" id="pwCon" type="password" placeholder="Confirm new password"/><button class="eye" onclick="eyeToggle('pwCon',this)">👁</button></div>
+  </div>
+  <button class="lbtn" id="pwBtn" onclick="doPwChange()" style="margin-top:18px"><div class="spin"></div><span class="bt">Update Password</span></button>
+  <div class="lerr" id="pwErr"></div>
+  <div class="modal-ok" id="pwOk">✅ Password updated successfully!</div>
+</div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginPage">
+<div class="lc">
+  <div class="cn tl"></div><div class="cn tr"></div><div class="cn bl"></div><div class="cn br"></div>
+  <div class="lc-hd">
+    <div style="width:50px;height:50px;border-radius:13px;background:linear-gradient(135deg,var(--pu),var(--pk));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel Decorative',serif;font-size:14px;color:#fff;font-weight:700;flex-shrink:0">R</div>
+    <div><div class="lc-brand">Rizz Live</div><div class="lc-sub">Admin Dashboard</div></div>
+  </div>
+  <h2>Welcome Back</h2>
+  <p>Sign in to access your dashboard</p>
+  <div style="margin-bottom:18px">
+    <label class="lbl">User ID</label>
+    <input class="inp" id="lid" type="text" placeholder="Enter your User ID" autocomplete="off" onkeydown="if(event.key==='Enter')document.getElementById('lpw').focus()"/>
+  </div>
+  <div style="margin-bottom:6px">
+    <label class="lbl">Password</label>
+    <div class="pw-w">
+      <input class="inp" id="lpw" type="password" placeholder="Enter password" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <button class="eye" onclick="eyeToggle('lpw',this)">👁</button>
+    </div>
+  </div>
+  <button class="lbtn" id="lbtn" onclick="doLogin()"><div class="spin"></div><span class="bt">Sign In</span></button>
+  <div class="lerr" id="lerr"></div>
+</div>
+</div>
+
+<!-- MOBILE OVERLAY -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<!-- APP -->
+<div id="app">
+<aside class="sb" id="sidebar">
+  <div class="sb-logo">
+    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--pu),var(--pk));border:2px solid rgba(200,151,58,0.5);display:flex;align-items:center;justify-content:center;font-family:'Cinzel Decorative',serif;font-size:12px;color:#fff;font-weight:700;flex-shrink:0">R</div>
+    <div><div class="sb-brand">Rizz Live</div><div class="sb-tag">Tracker</div></div>
+  </div>
+  <div class="sb-user" onclick="openPw()">
+    <div class="sb-av" id="sbAv">?</div>
+    <div style="min-width:0;flex:1">
+      <div class="sb-uname" id="sbName">—</div>
+      <div><span class="role-tag" id="sbRole">—</span></div>
+    </div>
+  </div>
+  <div class="sb-sec">Dashboard</div>
+  <button class="nav on" id="nav-dash" onclick="goTo('dash')"><span class="nav-ic">🏠</span><span>My Dashboard</span></button>
+  <button class="nav" id="nav-team" onclick="goTo('team')" style="display:none"><span class="nav-ic">👁</span><span>Team Overview</span></button>
+  <button class="nav" id="nav-hosts" onclick="goTo('hosts')"><span class="nav-ic">👥</span><span>Total Hosts</span></button>
+  <button class="nav" id="nav-stream" onclick="goTo('stream')"><span class="nav-ic">🎙️</span><span>Streamer Search</span></button>
+  <button class="nav" id="nav-agency" onclick="goTo('agency')"><span class="nav-ic">🏢</span><span>Agency Search</span></button>
+  <div class="sb-sec">Account</div>
+  <button class="nav" onclick="openPw()"><span class="nav-ic">🔐</span><span>Change Password</span></button>
+  <div class="sb-ft">
+    <button class="logout" onclick="doLogout()">⏏ &nbsp;Sign Out</button>
+    <div class="sb-ver">v3.1 · Rizz Live India 2026</div>
+  </div>
+</aside>
+<div class="main">
+  <!-- MOBILE TOPBAR -->
+  <div class="topbar">
+    <button class="topbar-menu" onclick="openSidebar()">☰</button>
+    <span class="topbar-brand">Rizz Live</span>
+    <div class="topbar-av" id="topbarAv" onclick="openPw()">?</div>
+  </div>
+
+  <div class="pg">
+
+    <!-- MY DASHBOARD -->
+    <div id="pg-dash">
+      <div class="dh">
+        <div class="dh-av" id="dhAv">?</div>
+        <div><div class="dh-name" id="dhName">Welcome!</div><div class="dh-sub" id="dhSub">Loading...</div></div>
+        <div class="dh-right">
+          <div class="dh-date" id="dhDateBadge">
+            <span class="dh-date-ic">📅</span>
+            <div class="dh-date-wrap">
+              <span class="dh-date-lbl">Data Till</span>
+              <span class="dh-date-val" id="dhDateVal">—</span>
+            </div>
+          </div>
+          <div class="dh-live"><div class="dh-dot"></div><span>Live</span></div>
+        </div>
+      </div>
+      <div class="top-stat ts-gold" style="margin-bottom:18px;max-width:260px">
+        <div class="ts-l">Total Active Hosts</div>
+        <div class="ts-v" id="ds-hosts">—</div>
+        <div class="ts-s">Monthly total</div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-ic">📊</span><span class="card-hd-t">Performance Breakdown</span></div>
+        <div class="tabs">
+          <button class="tab on" onclick="switchTab(this,'dt-mo','dt-we','dt-da')">📅 Monthly</button>
+          <button class="tab" onclick="switchTab(this,'dt-we','dt-mo','dt-da')">📊 Weekly</button>
+          <button class="tab" onclick="switchTab(this,'dt-da','dt-mo','dt-we')">📆 Daily</button>
+        </div>
+        <div id="dt-mo" class="tb on"><div id="dt-mo-c"><div class="loading-box"><div class="loading-ring"></div><p>Loading...</p></div></div></div>
+        <div id="dt-we" class="tb"><div id="dt-we-c"></div></div>
+        <div id="dt-da" class="tb"><div id="dt-da-c"></div></div>
+      </div>
+    </div>
+
+    <!-- TEAM OVERVIEW -->
+    <div id="pg-team" style="display:none">
+
+      <!-- Member selector -->
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-hd">
+          <span class="card-hd-ic">👁</span>
+          <span class="card-hd-t">Team Overview</span>
+          <span class="card-hd-s" id="team-subtitle">Select a member to view their data</span>
+        </div>
+        <div class="card-bd">
+          <div class="sr" style="align-items:flex-end">
+            <div class="sf">
+              <label class="lbl">Select Member</label>
+              <select class="si" id="teamSelect" onchange="onTeamSelect()">
+                <option value="">— Select Super Admin or Admin —</option>
+              </select>
+            </div>
+            <button class="sbtn pu" id="teamViewBtn" onclick="loadTeamMemberData()" disabled style="opacity:.5">📊 View Data</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member stats -->
+      <div id="team-member-panel" style="display:none">
+        <!-- Summary cards -->
+        <div id="team-summary-cards" style="margin-bottom:18px"></div>
+
+        <!-- Performance breakdown -->
+        <div class="card">
+          <div class="card-hd">
+            <span class="card-hd-ic">📊</span>
+            <span class="card-hd-t" id="team-member-name">Member</span>
+            <span class="card-hd-s" id="team-member-role"></span>
+          </div>
+          <div class="tabs">
+            <button class="tab on" onclick="switchTab(this,'tm-mo','tm-we','tm-da')">📅 Monthly</button>
+            <button class="tab" onclick="switchTab(this,'tm-we','tm-mo','tm-da')">📊 Weekly</button>
+            <button class="tab" onclick="switchTab(this,'tm-da','tm-mo','tm-we')">📆 Daily</button>
+          </div>
+          <div id="tm-mo" class="tb on"><div id="tm-mo-c"><div class="loading-box"><div class="loading-ring"></div><p>Loading...</p></div></div></div>
+          <div id="tm-we" class="tb"><div id="tm-we-c"></div></div>
+          <div id="tm-da" class="tb"><div id="tm-da-c"></div></div>
+        </div>
+      </div>
+
+      <div id="team-empty" class="nodata" style="margin-top:8px">
+        <big>👁</big>
+        <p>Select a Super Admin or Admin from the dropdown above to view their detailed data</p>
+      </div>
+    </div>
+
+    <!-- TOTAL HOSTS -->
+    <div id="pg-hosts" style="display:none">
+      <div class="card">
+        <div class="card-hd">
+          <span class="card-hd-ic">👥</span>
+          <span class="card-hd-t">Total Hosts</span>
+          <span class="card-hd-s" id="th-count">Loading...</span>
+        </div>
+        <!-- Search bar -->
+        <div class="card-bd" style="padding-bottom:12px">
+          <div class="sr">
+            <div class="sf">
+              <label class="lbl">Search Host</label>
+              <input class="si" id="thSearch" type="text" placeholder="Nick name, Premium ID, Agency..." oninput="filterTotalHosts()"/>
+            </div>
+          </div>
+        </div>
+        <div id="thResults">
+          <div class="loading-box"><div class="loading-ring"></div><p>Loading hosts...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STREAMER SEARCH -->
+    <div id="pg-stream" style="display:none">
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-ic">🎙️</span><span class="card-hd-t">Streamer Search</span><span class="card-hd-s">Search by Premium Number (Col B)</span></div>
+        <div class="card-bd">
+          <div class="sr">
+            <div class="sf"><label class="lbl">Premium Number</label><input class="si" id="strInput" type="text" placeholder="e.g. 411 or 800175036" onkeydown="if(event.key==='Enter')searchStreamer()"/></div>
+            <button class="sbtn pk" id="strBtn" onclick="searchStreamer()">🔍 Search</button>
+          </div>
+          <div class="err" id="strErr"></div>
+        </div>
+        <div id="strResults"></div>
+      </div>
+    </div>
+
+    <!-- AGENCY SEARCH -->
+    <div id="pg-agency" style="display:none">
+      <div class="card">
+        <div class="card-hd"><span class="card-hd-ic">🏢</span><span class="card-hd-t">Agency Search</span><span class="card-hd-s">Search by Union ID (Col E)</span></div>
+        <div class="card-bd">
+          <div class="sr">
+            <div class="sf"><label class="lbl">Union ID</label><input class="si" id="agInput" type="text" placeholder="e.g. 100925 or 101291" onkeydown="if(event.key==='Enter')searchAgency()"/></div>
+            <button class="sbtn pu" id="agBtn" onclick="searchAgency()">🔍 Search</button>
+          </div>
+          <div class="err" id="agErr"></div>
+        </div>
+        <div id="agResults"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyiet5O2tR5GgSlY3LZV-SL6p0viTXZiUVM3gYsDMj62Cedm2nppIwla8y_sHXONlY5qQ/exec';
+
+const FALLBACK_USERS = [
+  {id:"Ray.com",           password:"Ray123",        name:"Ray-IN",    role:"Country Admin", parent:""},
+  {id:"Rizz-Ray.com",      password:"Ray@1234",      name:"Ray",       role:"Admin",         parent:"Ray-IN"},
+  {id:"Rizz-Jhawkins.com", password:"Jhawkins@1234", name:"Jhawkins",  role:"Super Admin",   parent:"Ray-IN"},
+  {id:"Rizz-Kitty.com",    password:"Kitty@1234",    name:"Kitty",     role:"Admin",         parent:"Jhawkins"},
+  {id:"Rizz-Star.com",     password:"Star@1234",     name:"Star",      role:"Admin",         parent:"Ray-IN"},
+  {id:"Rizz-Dark.com",     password:"Dark@1234",     name:"Dark",      role:"Admin",         parent:"Jhawkins"},
+  {id:"Rizz-Hangover.com", password:"Hangover@1234", name:"Hangover",  role:"Admin",         parent:"Ray-IN"},
+  {id:"Nouman",            password:"1234",           name:"Nouman",    role:"Admin",         parent:"Ray-IN"},
+  {id:"David",             password:"Meet51ngh",      name:"David",     role:"Admin",         parent:"Ray-IN"},
+  {id:"Ray-IN",            password:"Ray-IN",         name:"Ray-IN",    role:"Country Admin", parent:""},
+  {id:"Mike-US",           password:"Mike@1234",      name:"Mike",      role:"Admin",         parent:"Ray-IN"},
+  {id:"Wood-US",           password:"Wood@1234",      name:"Wood",      role:"Admin",         parent:"Ray-IN"},
+  {id:"Dark-PK",           password:"Dark@1234",      name:"Dark-PK",   role:"Admin",         parent:"Ray-IN"},
+  {id:"Irshad-IN",         password:"Irshad@1234",    name:"Irshad",    role:"Admin",         parent:"Ray-IN"},
+  {id:"Ahin-IN",           password:"Ahin@1234",      name:"Ahin",      role:"Admin",         parent:"Ray-IN"},
+  {id:"Rajesh-IN",         password:"Rajesh@1234",    name:"Rajesh",    role:"Admin",         parent:"Ray-IN"},
+];
+
+let CU = null;
+
+function initials(n) {
+  const s = String(n || '').trim();
+  const p = s.split(/\s+/).filter(Boolean);
+  if (p.length >= 2) return (p[0][0] + p[1][0]).toUpperCase();
+  return s.slice(0, 2).toUpperCase() || '?';
+}
+function fmt(n) { return Number(n || 0).toLocaleString('en-IN'); }
+function eyeToggle(id, btn) {
+  const el = document.getElementById(id);
+  el.type = el.type === 'password' ? 'text' : 'password';
+  btn.textContent = el.type === 'password' ? '👁' : '🙈';
+}
+function showErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+function hideErr(id) { document.getElementById(id).style.display = 'none'; }
+
+// Mobile sidebar
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sbOverlay').classList.add('on');
+  document.getElementById('app').style.overflow = 'hidden';
+  document.getElementById('app').style.height = '100vh';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('on');
+  document.getElementById('app').style.overflow = '';
+  document.getElementById('app').style.height = '';
+}
+
+async function api(params) {
+  const url = API + '?' + new URLSearchParams({ ...params, t: Date.now() });
+  const res = await fetch(url, { method: 'GET', mode: 'cors', cache: 'no-cache' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  if (data && data.error) throw new Error(data.error);
+  return data;
+}
+
+async function doLogin() {
+  const uid = document.getElementById('lid').value.trim();
+  const pw  = document.getElementById('lpw').value.trim();
+  const btn = document.getElementById('lbtn');
+  hideErr('lerr');
+  if (!uid || !pw) { showErr('lerr', 'Please enter both User ID and Password.'); return; }
+  btn.classList.add('ld'); btn.disabled = true;
+  try {
+    let users = FALLBACK_USERS;
+    try {
+      const fromAPI = await api({ action: 'getUsers' });
+      if (Array.isArray(fromAPI) && fromAPI.length > 0) users = fromAPI;
+    } catch (e) { console.warn('Using local users'); }
+    const match = users.find(u =>
+      String(u.id || '').trim().toLowerCase() === uid.toLowerCase() &&
+      String(u.password || '').trim() === pw
+    );
+    if (!match) {
+      showErr('lerr', '❌ Wrong User ID or Password. Please check and try again.');
+      document.getElementById('lpw').value = '';
+    } else {
+      CU = match;
+      showApp();
+    }
+  } catch (e) {
+    showErr('lerr', 'Connection error: ' + e.message);
+  }
+  btn.classList.remove('ld'); btn.disabled = false;
+}
+
+function showApp() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('app').classList.add('on');
+  const name = CU.name || CU.id;
+  const role = (CU.role || '').toLowerCase();
+  document.getElementById('sbName').textContent = name;
+  document.getElementById('sbRole').textContent = CU.role || 'User';
+  document.getElementById('sbAv').textContent = initials(name);
+  document.getElementById('topbarAv').textContent = initials(name);
+  document.getElementById('dhAv').textContent = initials(name);
+  document.getElementById('dhName').textContent = 'Welcome, ' + name + '!';
+
+  // Show Team Overview nav only for Country Admin / Super Admin
+  const teamNav = document.getElementById('nav-team');
+  if (role === 'country admin' || role === 'super admin') {
+    teamNav.style.display = '';
+    loadTeamMembers(); // populate dropdown
+  } else {
+    teamNav.style.display = 'none';
+  }
+
+  loadDashboard();
+}
+
+function doLogout() {
+  CU = null;
+  window._hostsLoaded = false;
+  window._allHosts = [];
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('lid').value = '';
+  document.getElementById('lpw').value = '';
+  document.getElementById('lpw').type = 'password';
+  hideErr('lerr');
+  closeSidebar();
+}
+
+function openPw() {
+  ['pwOld', 'pwNew', 'pwCon'].forEach(id => {
+    document.getElementById(id).value = '';
+    document.getElementById(id).type = 'password';
+  });
+  hideErr('pwErr');
+  document.getElementById('pwOk').style.display = 'none';
+  document.getElementById('pwModal').classList.add('on');
+  closeSidebar();
+}
+function closePw() { document.getElementById('pwModal').classList.remove('on'); }
+document.getElementById('pwModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('pwModal')) closePw();
+});
+
+async function doPwChange() {
+  const old = document.getElementById('pwOld').value.trim();
+  const nw  = document.getElementById('pwNew').value.trim();
+  const cn  = document.getElementById('pwCon').value.trim();
+  const btn = document.getElementById('pwBtn');
+  hideErr('pwErr');
+  document.getElementById('pwOk').style.display = 'none';
+  if (!old || !nw || !cn) { showErr('pwErr', 'Please fill all fields.'); return; }
+  if (String(CU.password || '').trim() !== old) { showErr('pwErr', 'Current password is incorrect.'); return; }
+  if (nw.length < 4) { showErr('pwErr', 'New password must be at least 4 characters.'); return; }
+  if (nw !== cn) { showErr('pwErr', 'New passwords do not match.'); return; }
+  btn.classList.add('ld'); btn.disabled = true;
+  try { await api({ action: 'changePassword', id: CU.id, newPassword: nw }); } catch (e) {}
+  CU.password = nw;
+  document.getElementById('pwOk').style.display = 'block';
+  setTimeout(() => closePw(), 2000);
+  btn.classList.remove('ld'); btn.disabled = false;
+}
+
+function goTo(page) {
+  ['dash', 'team', 'hosts', 'stream', 'agency'].forEach(p => {
+    const el = document.getElementById('pg-' + p);
+    if (el) el.style.display = p === page ? '' : 'none';
+    const nav = document.getElementById('nav-' + p);
+    if (nav) nav.classList.toggle('on', p === page);
+  });
+  if (page === 'hosts' && !window._hostsLoaded) loadTotalHosts();
+  closeSidebar();
+}
+
+function switchTab(btn, showId, ...hideIds) {
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  [showId, ...hideIds].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('on', i === 0);
+  });
+}
+
+async function loadDashboard() {
+  const name = CU.name || CU.id;
+  const role = (CU.role || '').toLowerCase();
+  document.getElementById('dhSub').textContent = 'Loading data for ' + name + '...';
+  loadDataDate();
+
+  // Country Admin / Super Admin → hierarchy data
+  if (role === 'country admin' || role === 'super admin') {
+    try {
+      const data = await api({ action: 'getHierarchyData', adminName: name });
+      if (!data.success) throw new Error(data.error || 'No data');
+      renderHierarchyDashboard(data);
+    } catch(e) {
+      document.getElementById('dhSub').textContent = 'Could not load hierarchy data.';
+      document.getElementById('ds-hosts').textContent = '0';
+      ['dt-mo-c','dt-we-c','dt-da-c'].forEach(id => {
+        document.getElementById(id).innerHTML = '<div class="nodata"><big>📊</big><p>' + e.message + '</p></div>';
+      });
+    }
+    return;
+  }
+
+  // Regular Admin → original dashboard
+  try {
+    const data = await api({ action: 'getAdminData', adminName: name });
+    if (!data.success) throw new Error(data.error || 'No data returned');
+    renderDashboard(data);
+  } catch (e) {
+    document.getElementById('dhSub').textContent = 'Paste your Excel data into the Sheet to see stats here.';
+    document.getElementById('ds-hosts').textContent = '0';
+    const msg = '<div class="nodata"><big>📊</big><p>No data yet.</p></div>';
+    ['dt-mo-c', 'dt-we-c', 'dt-da-c'].forEach(id => document.getElementById(id).innerHTML = msg);
+  }
+}
+
+async function loadDataDate() {
+  try {
+    const data = await api({ action: 'getDataDate' });
+    if (data.dataDate) {
+      document.getElementById('dhDateVal').textContent = data.dataDate;
+      document.getElementById('dhDateBadge').style.display = 'flex';
+    } else {
+      document.getElementById('dhDateBadge').style.display = 'none';
+    }
+  } catch(e) {
+    document.getElementById('dhDateBadge').style.display = 'none';
+  }
+}
+
+function renderDashboard(data) {
+  const mo = data.monthly || {};
+  const we = data.weekly  || {};
+  const da = data.daily   || {};
+  document.getElementById('dhSub').textContent = 'Showing ' + (mo.totalHosts||0) + ' streamers across your agencies';
+  document.getElementById('ds-hosts').textContent = mo.totalHosts || 0;
+  if (data.dataDate) {
+    document.getElementById('dhDateVal').textContent = data.dataDate;
+    document.getElementById('dhDateBadge').style.display = 'flex';
+  }
+  document.getElementById('dt-mo-c').innerHTML = dashPeriodHTML(mo, 'Monthly');
+  document.getElementById('dt-we-c').innerHTML = dashPeriodHTML(we, 'Weekly');
+  document.getElementById('dt-da-c').innerHTML = dashPeriodHTML(da, 'Daily');
+}
+
+// ── HIERARCHY DASHBOARD ──────────────────────────────────────
+function renderHierarchyDashboard(data) {
+  const grand = data.grand || data.own || {};
+  const grandMo = grand.monthly || {};
+  document.getElementById('dhSub').textContent =
+    'Total ' + (grandMo.totalHosts||0) + ' active hosts across all teams';
+  document.getElementById('ds-hosts').textContent = grandMo.totalHosts || 0;
+
+  // Render tabs with hierarchy view
+  document.getElementById('dt-mo-c').innerHTML = hierarchyPeriodHTML(data, 'monthly');
+  document.getElementById('dt-we-c').innerHTML = hierarchyPeriodHTML(data, 'weekly');
+  document.getElementById('dt-da-c').innerHTML = hierarchyPeriodHTML(data, 'daily');
+}
+
+function hierarchyPeriodHTML(data, period) {
+  const role = (data.role||'').toLowerCase();
+  let h = '';
+
+  // ── Grand Total Summary ──────────────────────────────────
+  const grand = (data.grand || data.own || {})[period] || {};
+  h += '<div style="margin-bottom:20px">';
+  h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.07),transparent);border-left:3px solid var(--gold);border-radius:0 6px 6px 0">🌐 Grand Total</div>';
+  h += '<div class="sg3" style="margin-bottom:0">'
+    + statCard('rose','💎','Total Revenue', fmt(grand.totalRevenue||0)+' 💎','All teams combined')
+    + statCard('pur','🎙️','Active Hosts', grand.totalHosts||0,'All streamers')
+    + statCard('teal','🏢','Agencies', (grand.agencies||[]).length,'Unique agencies')
+    + '</div></div>';
+
+  // ── Super Admins ─────────────────────────────────────────
+  if (role === 'country admin' && data.superAdmins && data.superAdmins.length) {
+    h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.05),transparent);border-left:3px solid var(--pu2);border-radius:0 6px 6px 0">⭐ Super Admins</div>';
+    h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:20px"><thead><tr><th>Super Admin</th><th>Revenue</th><th>Active Hosts</th><th>Agencies</th><th></th></tr></thead><tbody>';
+    data.superAdmins.forEach((sa, idx) => {
+      const p = (sa[period]||{});
+      const panId = 'sa_pan_' + period + '_' + idx;
+      h += '<tr>'
+        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av" style="background:rgba(91,47,190,.1);color:var(--pu2);border-color:rgba(91,47,190,.25)">' + initials(sa.name) + '</div><span style="font-family:Cinzel,serif;font-weight:700;font-size:12px">' + sa.name + '</span></div></td>'
+        + '<td><span class="pill r">' + fmt(p.totalRevenue||0) + ' 💎</span></td>'
+        + '<td><span class="pill p">' + (p.totalHosts||0) + '</span></td>'
+        + '<td><span class="pill t">' + (p.agencies||[]).length + '</span></td>'
+        + '<td><button onclick="toggleHierPanel(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(91,47,190,.3);background:linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07));color:var(--pu2);font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap">👁 Details</button></td>'
+        + '</tr>'
+        + '<tr id="' + panId + '" style="display:none"><td colspan="5" style="padding:0;background:rgba(91,47,190,.02)">'
+        + '<div style="padding:14px 16px">';
+
+      // SA own performance
+      const saOwn = sa[period] || {};
+      h += '<div style="font-size:9px;font-family:Cinzel,serif;font-weight:700;color:var(--pu2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📊 ' + sa.name + ' — Team Performance</div>';
+      h += '<div class="sg3" style="margin-bottom:14px">'
+        + statCard('rose','💎','Revenue',fmt(saOwn.totalRevenue||0)+' 💎','')
+        + statCard('pur','🎙️','Hosts',saOwn.totalHosts||0,'')
+        + statCard('teal','🏢','Agencies',(saOwn.agencies||[]).length,'')
+        + '</div>';
+
+      // SA's admins
+      if (sa.admins && sa.admins.length) {
+        h += '<div style="font-size:9px;font-family:Cinzel,serif;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">👤 Admins under ' + sa.name + '</div>';
+        h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:0"><thead><tr><th>Admin</th><th>Revenue</th><th>Hosts</th><th>Agencies</th><th></th></tr></thead><tbody>';
+        sa.admins.forEach((ad, ai) => {
+          const ap = (ad[period]||{});
+          const adPanId = 'ad_pan_' + period + '_' + idx + '_' + ai;
+          h += '<tr>'
+            + '<td><div style="display:flex;align-items:center;gap:8px"><div class="av">' + initials(ad.name) + '</div><span style="font-weight:600;font-size:12px">' + ad.name + '</span></div></td>'
+            + '<td><span class="pill r">' + fmt(ap.totalRevenue||0) + ' 💎</span></td>'
+            + '<td><span class="pill p">' + (ap.totalHosts||0) + '</span></td>'
+            + '<td><span class="pill t">' + (ap.agencies||[]).length + '</span></td>'
+            + '<td><button onclick="toggleHierPanel(\'' + adPanId + '\',this)" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(192,22,138,.25);background:rgba(192,22,138,.07);color:var(--pk2);font-family:Cinzel,serif;font-size:8.5px;font-weight:700;cursor:pointer;white-space:nowrap">📋 Streamers</button></td>'
+            + '</tr>'
+            + '<tr id="' + adPanId + '" style="display:none"><td colspan="5" style="padding:0;background:rgba(192,22,138,.02)">'
+            + '<div style="padding:12px 14px">' + miniStreamerTable(ap.streamers||[]) + '</div>'
+            + '</td></tr>';
+        });
+        h += '</tbody></table></div>';
+      }
+      h += '</div></td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+
+  // ── Direct Admins (under Country Admin) ──────────────────
+  const directAdmins = role === 'country admin' ? (data.directAdmins||[]) : (data.admins||[]);
+  if (directAdmins.length) {
+    const lbl = role === 'country admin' ? '👤 Direct Admins' : '👤 My Admins';
+    h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.05),transparent);border-left:3px solid var(--pk2);border-radius:0 6px 6px 0">' + lbl + '</div>';
+    h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:20px"><thead><tr><th>Admin</th><th>Revenue</th><th>Active Hosts</th><th>Agencies</th><th></th></tr></thead><tbody>';
+    directAdmins.forEach((ad, idx) => {
+      const ap = (ad[period]||{});
+      const panId = 'da_pan_' + period + '_' + idx;
+      h += '<tr>'
+        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av">' + initials(ad.name) + '</div><span style="font-family:Cinzel,serif;font-weight:700;font-size:12px">' + ad.name + '</span></div></td>'
+        + '<td><span class="pill r">' + fmt(ap.totalRevenue||0) + ' 💎</span></td>'
+        + '<td><span class="pill p">' + (ap.totalHosts||0) + '</span></td>'
+        + '<td><span class="pill t">' + (ap.agencies||[]).length + '</span></td>'
+        + '<td><button onclick="toggleHierPanel(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(192,22,138,.3);background:linear-gradient(135deg,rgba(192,22,138,.08),rgba(91,47,190,.05));color:var(--pk2);font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap">📋 Streamers</button></td>'
+        + '</tr>'
+        + '<tr id="' + panId + '" style="display:none"><td colspan="5" style="padding:0;background:rgba(192,22,138,.02)">'
+        + '<div style="padding:12px 14px">' + miniStreamerTable(ap.streamers||[]) + '</div>'
+        + '</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+
+  // ── Own Data ─────────────────────────────────────────────
+  if (data.own) {
+    const own = (data.own||{})[period] || {};
+    if (own.streamers && own.streamers.length) {
+      h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.05),transparent);border-left:3px solid var(--gold);border-radius:0 6px 6px 0">🎙️ My Own Streamers</div>';
+      h += dashPeriodHTML(own, 'Own');
+    }
+  }
+
+  if (!h) h = '<div class="nodata"><big>📊</big><p>No data for this period</p></div>';
+  return h;
+}
+
+function statCard(type, ic, label, value, sub) {
+  return '<div class="sc ' + type + '"><div class="sc-ic">' + ic + '</div><div class="sc-l">' + label + '</div><div class="sc-v">' + value + '</div>' + (sub ? '<div class="sc-s">' + sub + '</div>' : '') + '</div>';
+}
+
+function miniStreamerTable(streamers) {
+  if (!streamers || !streamers.length) return '<div class="nodata" style="padding:20px"><big>🎙️</big><p>No streamers</p></div>';
+  let h = '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Agency</th><th>Revenue</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
+  streamers.forEach(r => {
+    h += '<tr>'
+      + '<td><span class="pill g">' + r.premiumNumber + '</span></td>'
+      + '<td><div style="display:flex;align-items:center;gap:7px"><div class="av">' + initials(r.nickName) + '</div><span style="font-weight:600;font-size:12px">' + r.nickName + '</span></div></td>'
+      + '<td style="font-size:11px;color:var(--dim)">' + r.unionName + '</td>'
+      + '<td><span class="pill r">' + fmt(r.totalRevenue) + ' 💎</span></td>'
+      + '<td><span class="pill t">' + fmt(r.validHrs) + 'h</span></td>'
+      + '<td><span class="pill gr">' + r.validDays + 'd</span></td>'
+      + '</tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
+}
+
+function toggleHierPanel(panId, btn) {
+  const pan = document.getElementById(panId);
+  const open = pan.style.display !== 'none' && pan.style.display !== '';
+  pan.style.display = open ? 'none' : 'table-row';
+  if (open) {
+    btn.textContent = btn.textContent.includes('Hide') ? btn.textContent.replace('Hide','').trim() : btn.textContent;
+    btn.style.opacity = '1';
+  } else {
+    btn.style.opacity = '.7';
+  }
+}
+
+function dashPeriodHTML(period, label) {
+  if (!period || !period.streamers || !period.streamers.length)
+    return '<div class="nodata"><big>📊</big><p>No ' + label + ' data found</p></div>';
+
+  const st    = period.streamers;
+  const tRev  = period.totalRevenue || 0;
+  const ags   = period.agencies || [...new Set(st.map(r=>r.unionName))];
+
+  // Only Revenue stat card — no Valid Hrs / Valid Days summary
+  let h = '<div style="margin-bottom:18px">'
+    + '<div class="sc rose" style="max-width:280px"><div class="sc-ic">💎</div><div class="sc-l">Revenue</div><div class="sc-v">' + fmt(tRev) + '</div><div class="sc-s">Combined rubies</div></div>'
+    + '</div>';
+
+  if (ags.length) {
+    const safeLabel = label.replace(/\s+/g,'_');
+    h += '<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:7px 10px;background:linear-gradient(90deg,rgba(91,47,190,.05),transparent);border-left:3px solid var(--pu);border-radius:0 6px 6px 0">◆ Agency Breakdown</div>';
+    h += '<div style="overflow-x:auto"><table class="tbl" style="margin-bottom:8px"><thead><tr><th>Agency</th><th>Union ID</th><th>Streamers</th><th>Revenue</th><th>Valid Duration</th><th>Valid Days</th><th></th></tr></thead><tbody>';
+    ags.forEach((agN, idx) => {
+      const agS   = st.filter(r => r.unionName === agN);
+      const agR   = agS.reduce((s,r)=>s+(r.totalRevenue||0), 0);
+      const agH   = agS.reduce((s,r)=>s+(r.validHrs||0), 0);
+      const agD   = agS.reduce((s,r)=>s+(r.validDays||0), 0);
+      const uid   = agS[0] ? agS[0].unionId : '';
+      const panId = 'ag_pan_' + safeLabel + '_' + idx;
+      // store hosts data as JSON in a hidden span
+      const hostsJson = JSON.stringify(agS).replace(/'/g,"&#39;").replace(/"/g,'&quot;');
+      h += '<tr>'
+        + '<td><div style="display:flex;align-items:center;gap:9px"><div class="av" style="background:rgba(200,151,58,.08);color:var(--gold3);border-color:rgba(200,151,58,.22)">' + initials(agN) + '</div><span style="font-family:Cinzel,serif;font-size:11.5px;font-weight:600">' + agN + '</span></div></td>'
+        + '<td><span class="pill g">' + uid + '</span></td>'
+        + '<td><span class="pill p">' + agS.length + '</span></td>'
+        + '<td><span class="pill r">' + fmt(agR) + ' 💎</span></td>'
+        + '<td><span class="pill t">' + fmt(agH) + '</span></td>'
+        + '<td><span class="pill gr">' + fmt(agD) + 'd</span></td>'
+        + '<td><button onclick="toggleAgHosts(\'' + panId + '\',this)" style="padding:5px 13px;border-radius:7px;border:1px solid rgba(91,47,190,.3);background:linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07));color:var(--pu2);font-family:Cinzel,serif;font-size:9px;font-weight:700;letter-spacing:.8px;cursor:pointer;white-space:nowrap;transition:.18s" onmouseover="this.style.background=\'linear-gradient(135deg,rgba(91,47,190,.22),rgba(192,22,138,.14))\'" onmouseout="this.style.background=\'linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07))\'">👥 View Hosts</button></td>'
+        + '</tr>'
+        + '<tr id="' + panId + '" style="display:none"><td colspan="7" style="padding:0;background:rgba(91,47,190,.025)">'
+        + '<div style="padding:14px 16px 18px">'
+        + '<div style="font-family:Cinzel,serif;font-size:9.5px;font-weight:700;color:var(--pu3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding:5px 10px;background:linear-gradient(90deg,rgba(91,47,190,.07),transparent);border-left:3px solid var(--pk2);border-radius:0 5px 5px 0">🎙️ ' + agN + ' — ' + agS.length + ' Hosts</div>'
+        + '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Revenue</th><th>Hot Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>'
+        + agS.map(r =>
+            '<tr>'
+            + '<td><span class="pill g">' + r.premiumNumber + '</span></td>'
+            + '<td><div style="display:flex;align-items:center;gap:8px"><div class="av">' + initials(r.nickName) + '</div><span style="font-weight:600;font-size:12px">' + r.nickName + '</span></div></td>'
+            + '<td><span class="pill r">' + fmt(r.totalRevenue) + ' 💎</span></td>'
+            + '<td><span class="pill p">' + fmt(r.hotGift) + '</span></td>'
+            + '<td><span class="pill t">' + fmt(r.validHrs) + 'h</span></td>'
+            + '<td><span class="pill gr">' + r.validDays + 'd</span></td>'
+            + '</tr>'
+          ).join('')
+        + '</tbody></table></div>'
+        + '</div></td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+
+  return h;
+}
+
+// ── TOTAL HOSTS ──────────────────────────────────────────────
+window._hostsLoaded = false;
+window._allHosts = [];
+
+async function loadTotalHosts() {
+  const res = document.getElementById('thResults');
+  const cnt = document.getElementById('th-count');
+  res.innerHTML = '<div class="loading-box"><div class="loading-ring"></div><p>Loading hosts...</p></div>';
+  try {
+    const data = await api({ action: 'getTotalHosts', adminName: CU.name || CU.id });
+    if (!data.success) throw new Error(data.error || 'No data');
+    window._allHosts = data.hosts;
+    window._hostsLoaded = true;
+    cnt.textContent = data.hosts.length + ' hosts';
+    renderTotalHosts(data.hosts);
+  } catch(e) {
+    res.innerHTML = '<div class="nodata" style="margin:16px"><big>👥</big><p>' + e.message + '</p></div>';
+    cnt.textContent = 'Error loading';
+  }
+}
+
+function filterTotalHosts() {
+  const q = document.getElementById('thSearch').value.trim().toLowerCase();
+  if (!q) { renderTotalHosts(window._allHosts); return; }
+  const filtered = window._allHosts.filter(h =>
+    (h.nickName      || '').toLowerCase().includes(q) ||
+    (h.liveCreatorId || '').toLowerCase().includes(q) ||
+    (h.agencyName    || '').toLowerCase().includes(q) ||
+    (h.agencyNick    || '').toLowerCase().includes(q) ||
+    (h.idx           || '').toLowerCase().includes(q)
+  );
+  renderTotalHosts(filtered);
+}
+
+function renderTotalHosts(hosts) {
+  const res = document.getElementById('thResults');
+  if (!hosts || !hosts.length) {
+    res.innerHTML = '<div class="nodata" style="margin:16px"><big>👥</big><p>No hosts found</p></div>';
+    return;
+  }
+  let h = '<div style="overflow-x:auto"><table class="tbl"><thead><tr>'
+    + '<th>#</th>'
+    + '<th>Creator ID</th>'
+    + '<th>Nick Name</th>'
+    + '<th>Agency</th>'
+    + '<th>Agency Nick</th>'
+    + '<th>Networks ID</th>'
+    + '<th>Star</th>'
+    + '</tr></thead><tbody>';
+  hosts.forEach((r, i) => {
+    h += '<tr>'
+      + '<td style="color:var(--dim);font-size:11px">' + (i+1) + '</td>'
+      + '<td><span class="pill g">' + (r.liveCreatorId||'—') + '</span></td>'
+      + '<td><div style="display:flex;align-items:center;gap:8px"><div class="av">' + initials(r.nickName) + '</div><span style="font-weight:600;font-size:12px">' + (r.nickName||'—') + '</span></div></td>'
+      + '<td style="font-size:11.5px;font-weight:500">' + (r.agencyName||'—') + '</td>'
+      + '<td><span class="pill p">' + (r.agencyNick||'—') + '</span></td>'
+      + '<td><span class="pill t">' + (r.networksId||'—') + '</span></td>'
+      + '<td style="font-size:11px;color:var(--dim)">' + (r.starRating||'—') + '</td>'
+      + '</tr>';
+  });
+  h += '</tbody></table></div>';
+  res.innerHTML = h;
+}
+
+// ── TEAM OVERVIEW ────────────────────────────────────────────
+window._teamMembers = [];
+
+async function loadTeamMembers() {
+  try {
+    const users = await api({ action: 'getUsers' });
+    if (!Array.isArray(users)) return;
+    const myName = (CU.name || CU.id).toLowerCase();
+    const myRole = (CU.role || '').toLowerCase();
+
+    // For Country Admin: get all Super Admins + Admins whose parent chain includes me
+    // For Super Admin: get all Admins whose parent is me
+    let members = [];
+    if (myRole === 'country admin') {
+      // Direct children (Super Admins + Admins)
+      const directChildren = users.filter(u =>
+        (u.parent||'').trim().toLowerCase() === myName
+      );
+      // Super Admins' admins
+      const superAdmins = directChildren.filter(u => (u.role||'').toLowerCase() === 'super admin');
+      const saAdmins = [];
+      superAdmins.forEach(sa => {
+        const saKids = users.filter(u => (u.parent||'').trim().toLowerCase() === sa.name.toLowerCase());
+        saAdmins.push(...saKids);
+      });
+      members = [...directChildren, ...saAdmins];
+    } else if (myRole === 'super admin') {
+      members = users.filter(u => (u.parent||'').trim().toLowerCase() === myName);
+    }
+
+    window._teamMembers = members;
+
+    // Populate dropdown
+    const sel = document.getElementById('teamSelect');
+    sel.innerHTML = '<option value="">— Select Super Admin or Admin —</option>';
+
+    // Group by role
+    const superAdmins = members.filter(u => (u.role||'').toLowerCase() === 'super admin');
+    const admins      = members.filter(u => (u.role||'').toLowerCase() !== 'super admin');
+
+    if (superAdmins.length) {
+      const grp = document.createElement('optgroup');
+      grp.label = '⭐ Super Admins';
+      superAdmins.forEach(u => {
+        const opt = document.createElement('option');
+        opt.value = u.name;
+        opt.textContent = u.name;
+        opt.dataset.role = u.role;
+        grp.appendChild(opt);
+      });
+      sel.appendChild(grp);
+    }
+    if (admins.length) {
+      const grp = document.createElement('optgroup');
+      grp.label = '👤 Admins';
+      admins.forEach(u => {
+        const opt = document.createElement('option');
+        opt.value = u.name;
+        opt.textContent = u.name;
+        opt.dataset.role = u.role;
+        grp.appendChild(opt);
+      });
+      sel.appendChild(grp);
+    }
+  } catch(e) {
+    console.warn('loadTeamMembers:', e.message);
+  }
+}
+
+function onTeamSelect() {
+  const sel = document.getElementById('teamSelect');
+  const btn = document.getElementById('teamViewBtn');
+  const val = sel.value;
+  btn.disabled = !val;
+  btn.style.opacity = val ? '1' : '.5';
+  if (!val) {
+    document.getElementById('team-member-panel').style.display = 'none';
+    document.getElementById('team-empty').style.display = '';
+  }
+}
+
+async function loadTeamMemberData() {
+  const sel  = document.getElementById('teamSelect');
+  const name = sel.value;
+  if (!name) return;
+
+  // Get selected member's role
+  const member = window._teamMembers.find(u => u.name === name) || {};
+  const role   = (member.role || 'Admin');
+
+  document.getElementById('team-member-panel').style.display = 'none';
+  document.getElementById('team-empty').style.display = 'none';
+  document.getElementById('team-subtitle').textContent = 'Loading ' + name + '...';
+
+  // Show loading in tabs
+  ['tm-mo-c','tm-we-c','tm-da-c'].forEach(id => {
+    document.getElementById(id).innerHTML = '<div class="loading-box"><div class="loading-ring"></div><p>Loading...</p></div>';
+  });
+  document.getElementById('team-member-panel').style.display = '';
+
+  try {
+    // Use getAdminData for simple Admins, getHierarchyData for Super Admins
+    const action = (role.toLowerCase() === 'super admin') ? 'getHierarchyData' : 'getAdminData';
+    const data   = await api({ action, adminName: name });
+    if (!data.success) throw new Error(data.error || 'No data');
+
+    document.getElementById('team-member-name').textContent = name;
+    document.getElementById('team-member-role').textContent = role;
+    document.getElementById('team-subtitle').textContent = name + ' — ' + role;
+
+    // Summary cards
+    const mo = (action === 'getAdminData') ? data.monthly : ((data.grand||data.own||{}).monthly||{});
+    const totalRev   = mo.totalRevenue || 0;
+    const totalHosts = mo.totalHosts   || 0;
+    const totalAg    = (mo.agencies||[]).length;
+
+    document.getElementById('team-summary-cards').innerHTML =
+      '<div class="sg3" style="margin-bottom:0">'
+      + statCard('rose','💎','Total Revenue', fmt(totalRev)+' 💎','Monthly combined')
+      + statCard('pur','🎙️','Active Hosts', totalHosts,'Monthly total')
+      + statCard('teal','🏢','Agencies', totalAg,'Unique agencies')
+      + '</div>';
+
+    // Render period tabs
+    if (action === 'getAdminData') {
+      document.getElementById('tm-mo-c').innerHTML = dashPeriodHTML(data.monthly||{}, 'Monthly');
+      document.getElementById('tm-we-c').innerHTML = dashPeriodHTML(data.weekly||{},  'Weekly');
+      document.getElementById('tm-da-c').innerHTML = dashPeriodHTML(data.daily||{},   'Daily');
+    } else {
+      // Super Admin → hierarchy view
+      document.getElementById('tm-mo-c').innerHTML = hierarchyPeriodHTML(data, 'monthly');
+      document.getElementById('tm-we-c').innerHTML = hierarchyPeriodHTML(data, 'weekly');
+      document.getElementById('tm-da-c').innerHTML = hierarchyPeriodHTML(data, 'daily');
+    }
+
+    document.getElementById('team-empty').style.display = 'none';
+  } catch(e) {
+    ['tm-mo-c','tm-we-c','tm-da-c'].forEach(id => {
+      document.getElementById(id).innerHTML = '<div class="nodata"><big>⚠️</big><p>' + e.message + '</p></div>';
+    });
+    document.getElementById('team-subtitle').textContent = 'Error loading data';
+  }
+}
+
+function toggleAgHosts(panId, btn) {
+  const pan = document.getElementById(panId);
+  const open = pan.style.display !== 'none' && pan.style.display !== '';
+  pan.style.display = open ? 'none' : 'table-row';
+  btn.textContent = open ? '👥 View Hosts' : '🔼 Hide Hosts';
+  btn.style.background = open
+    ? 'linear-gradient(135deg,rgba(91,47,190,.12),rgba(192,22,138,.07))'
+    : 'linear-gradient(135deg,rgba(91,47,190,.25),rgba(192,22,138,.18))';
+  btn.style.color = open ? 'var(--pu2)' : '#fff';
+}
+
+async function searchStreamer() {
+  const q   = document.getElementById('strInput').value.trim();
+  const res = document.getElementById('strResults');
+  const btn = document.getElementById('strBtn');
+  hideErr('strErr'); res.innerHTML = '';
+  if (!q) { showErr('strErr', 'Please enter a premium number.'); return; }
+  btn.disabled = true; btn.textContent = '⏳ Searching...';
+  try {
+    const data = await api({ action: 'searchStreamer', premiumNumber: q });
+    if (!data.success) throw new Error(data.error || 'Not found');
+    res.innerHTML = renderStreamerResult(data.streamer);
+  } catch (e) { showErr('strErr', e.message); }
+  btn.disabled = false; btn.innerHTML = '🔍 Search';
+}
+
+function renderStreamerResult(s) {
+  let h = '<div class="pr"><div class="pr-av h">' + initials(s.nickName) + '</div>'
+    + '<div><div class="pr-name">' + s.nickName + '</div>'
+    + '<div class="pr-meta">Premium: <code>' + s.premiumNumber + '</code> · ' + s.unionName + ' · Admin: <code>' + s.admin + '</code></div></div>'
+    + '<span class="pr-badge act">● Active</span></div>';
+  h += '<div class="tabs">'
+    + '<button class="tab on" onclick="switchTab(this,\'st-mo\',\'st-we\',\'st-da\')">📅 Monthly</button>'
+    + '<button class="tab" onclick="switchTab(this,\'st-we\',\'st-mo\',\'st-da\')">📊 Weekly</button>'
+    + '<button class="tab" onclick="switchTab(this,\'st-da\',\'st-mo\',\'st-we\')">📆 Daily</button>'
+    + '</div>';
+  h += '<div id="st-mo" class="tb on">' + streamerPeriodHTML(s.monthly) + '</div>';
+  h += '<div id="st-we" class="tb">'    + streamerPeriodHTML(s.weekly)  + '</div>';
+  h += '<div id="st-da" class="tb">'    + streamerPeriodHTML(s.daily)   + '</div>';
+  return h;
+}
+
+function streamerPeriodHTML(rows) {
+  if (!rows || !rows.length)
+    return '<div class="nodata"><big>📊</big><p>No data for this period</p></div>';
+  const tRev  = rows.reduce((s,x)=>s+(x.totalRevenue||0), 0);
+  const tHrs  = rows.reduce((s,x)=>s+(x.validHrs||0), 0);
+  const tDays = rows.reduce((s,x)=>s+(x.validDays||0), 0);
+  let h = '<div class="sg3" style="margin:16px 0">'
+    + '<div class="sc rose"><div class="sc-ic">💎</div><div class="sc-l">Revenue</div><div class="sc-v">' + fmt(tRev) + '</div></div>'
+    + '<div class="sc teal"><div class="sc-ic">⏱️</div><div class="sc-l">Valid Duration</div><div class="sc-v">' + fmt(tHrs) + '</div></div>'
+    + '<div class="sc gold"><div class="sc-ic">📅</div><div class="sc-l">Valid Days</div><div class="sc-v">' + fmt(tDays) + '</div></div>'
+    + '</div>';
+  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>IDX</th><th>Nick Name</th><th>Agency</th><th>Revenue</th><th>Hot Gift</th><th>Luxury Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
+  rows.forEach(x => {
+    h += '<tr>'
+      + '<td><span class="pill g">' + x.idx + '</span></td>'
+      + '<td><span style="font-weight:600">' + x.nickName + '</span></td>'
+      + '<td style="font-size:11px">' + x.unionName + '</td>'
+      + '<td><span class="pill r">' + fmt(x.totalRevenue) + ' 💎</span></td>'
+      + '<td><span class="pill p">' + fmt(x.hotGift) + '</span></td>'
+      + '<td><span class="pill p">' + fmt(x.luxuryGift) + '</span></td>'
+      + '<td><span class="pill t">' + fmt(x.validHrs) + 'h</span></td>'
+      + '<td><span class="pill gr">' + x.validDays + 'd</span></td>'
+      + '</tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
+}
+
+async function searchAgency() {
+  const q   = document.getElementById('agInput').value.trim();
+  const res = document.getElementById('agResults');
+  const btn = document.getElementById('agBtn');
+  hideErr('agErr'); res.innerHTML = '';
+  if (!q) { showErr('agErr', 'Please enter a Union ID.'); return; }
+  btn.disabled = true; btn.textContent = '⏳ Searching...';
+  try {
+    const data = await api({ action: 'searchAgency', unionId: q });
+    if (!data.success) throw new Error(data.error || 'Not found');
+    res.innerHTML = renderAgencyResult(data.agency);
+  } catch (e) { showErr('agErr', e.message); }
+  btn.disabled = false; btn.innerHTML = '🔍 Search';
+}
+
+function renderAgencyResult(ag) {
+  let h = '<div class="pr"><div class="pr-av a">' + initials(ag.unionName) + '</div>'
+    + '<div><div class="pr-name">' + ag.unionName + '</div>'
+    + '<div class="pr-meta">Union ID: <code>' + ag.unionId + '</code></div></div>'
+    + '<span class="pr-badge ag">Agency</span></div>';
+  h += '<div class="tabs">'
+    + '<button class="tab on" onclick="switchTab(this,\'at-mo\',\'at-we\',\'at-da\')">📅 Monthly</button>'
+    + '<button class="tab" onclick="switchTab(this,\'at-we\',\'at-mo\',\'at-da\')">📊 Weekly</button>'
+    + '<button class="tab" onclick="switchTab(this,\'at-da\',\'at-mo\',\'at-we\')">📆 Daily</button>'
+    + '</div>';
+  h += '<div id="at-mo" class="tb on">' + agencyPeriodHTML(ag.monthly) + '</div>';
+  h += '<div id="at-we" class="tb">'    + agencyPeriodHTML(ag.weekly)  + '</div>';
+  h += '<div id="at-da" class="tb">'    + agencyPeriodHTML(ag.daily)   + '</div>';
+  return h;
+}
+
+function agencyPeriodHTML(period) {
+  if (!period || !period.streamers || !period.streamers.length)
+    return '<div class="nodata"><big>🏢</big><p>No data for this period</p></div>';
+  const st = period.streamers;
+  let h = '<div class="sg2" style="margin:16px 0 18px">'
+    + '<div class="sc gold"><div class="sc-ic">💰</div><div class="sc-l">Total Revenue</div><div class="sc-v">' + fmt(period.totalRevenue) + ' 💎</div></div>'
+    + '<div class="sc pur"><div class="sc-ic">🎙️</div><div class="sc-l">Streamers</div><div class="sc-v">' + period.totalHosts + '</div></div>'
+    + '</div>';
+  h += '<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Premium #</th><th>Nick Name</th><th>Star</th><th>Admin</th><th>Revenue</th><th>Hot Gift</th><th>Valid Duration</th><th>Valid Days</th></tr></thead><tbody>';
+  st.forEach(r => {
+    h += '<tr>'
+      + '<td><span class="pill g">' + r.premiumNumber + '</span></td>'
+      + '<td><div style="display:flex;align-items:center;gap:8px"><div class="av">' + initials(r.nickName) + '</div><span style="font-weight:600;font-size:12px">' + r.nickName + '</span></div></td>'
+      + '<td style="font-size:11px">' + r.starRating + '</td>'
+      + '<td><span class="pill p">' + r.admin + '</span></td>'
+      + '<td><span class="pill r">' + fmt(r.totalRevenue) + ' 💎</span></td>'
+      + '<td><span class="pill p">' + fmt(r.hotGift) + '</span></td>'
+      + '<td><span class="pill t">' + fmt(r.validHrs) + 'h</span></td>'
+      + '<td><span class="pill gr">' + r.validDays + 'd</span></td>'
+      + '</tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
+}
+
+document.getElementById('loginPage').classList.remove('hidden');
+</script>
+</body>
+</html>
