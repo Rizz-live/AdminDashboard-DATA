@@ -238,7 +238,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
 .sc-ic{font-size:20px;margin-bottom:10px;filter:drop-shadow(0 2px 8px rgba(124,58,237,0.5))}
 .sc-l{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;
   color:var(--t3);margin-bottom:6px;font-family:'JetBrains Mono',monospace}
-.sc-v{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-0.5px}
+.sc-v{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:700;color:var(--t1);letter-spacing:0}
 .sc-s{font-size:10.5px;color:var(--t3);margin-top:4px}
 
 /* ═══ TOP STAT ════════════════════════════════════════════ */
@@ -256,7 +256,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
 .ts-teal::after{background:var(--teal)}
 .ts-l{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;
   color:var(--t3);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
-.ts-v{font-size:26px;font-weight:700;color:var(--t1);font-family:'Syne',sans-serif;letter-spacing:-1px}
+.ts-v{font-size:24px;font-weight:700;color:var(--t1);font-family:'Space Grotesk',sans-serif;letter-spacing:-0.3px}
 .ts-s{font-size:11px;color:var(--t3);margin-top:4px}
 .top-stat:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12);transform:translateY(-2px);
   box-shadow:0 8px 32px rgba(0,0,0,.4)}
@@ -688,7 +688,13 @@ function initials(n) {
   if (p.length >= 2) return (p[0][0] + p[1][0]).toUpperCase();
   return s.slice(0, 2).toUpperCase() || '?';
 }
-function fmt(n) { return Number(n || 0).toLocaleString('en-IN'); }
+function fmt(n) {
+  const num = Number(n || 0);
+  if (num >= 10000000) return (num/10000000).toFixed(2) + ' Cr';
+  if (num >= 100000)   return (num/100000).toFixed(2) + ' L';
+  if (num >= 1000)     return (num/1000).toFixed(1) + 'K';
+  return num.toLocaleString('en-IN');
+}
 function eyeToggle(id, btn) {
   const el = document.getElementById(id);
   el.type = el.type === 'password' ? 'text' : 'password';
